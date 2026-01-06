@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}
+    </title>
+    <meta
+      name="description"
+      content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}"
+    />
+    <!-- <base href="{{ site.url }}" /> -->
+
+    <link rel="icon" href="{{ '/img/favicon.png' | relative_url }}" />
+    <link
+      rel="apple-touch-icon"
+      href="{{ '/img/apple-touch-icon.png' | relative_url }} "
+    />
+    <link rel="manifest" href="{{ '/manifest.webmanifest' | relative_url }}" />
+
+    <!-- CSS FILES -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link href="{{ '/css/style.css' | relative_url }}" rel="stylesheet" />
+    <link href="{{ '/css/queries.css' | relative_url }}" rel="stylesheet" />
+    <link
+      href="{{ '/css/rouge-pastie.css' | relative_url }}"
+      rel="stylesheet"
+    />
+
+    <!-- JS SCRIPTS -->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        let activeLightbox = null;
+        let scale = 1;
+
+        const MIN_SCALE = 1;
+        const MAX_SCALE = 3;
+        const ZOOM_STEP = 0.15;
+
+        function closeLightbox() {
+          if (!activeLightbox) return;
+
+          activeLightbox.classList.remove("active");
+          setTimeout(() => {
+            activeLightbox.remove();
+            activeLightbox = null;
+            scale = 1;
+          }, 250);
+        }
+
+        document.querySelectorAll(".zoomable img").forEach((img) => {
+          img.addEventListener("click", () => {
+            if (activeLightbox) return;
+
+            const overlay = document.createElement("div");
+            overlay.className = "lightbox";
+            overlay.innerHTML = `
+        <span class="lightbox-close">&times;</span>
+        <img src="${img.src}" alt="">
+      `;
+
+            document.body.appendChild(overlay);
+            activeLightbox = overlay;
+
+            const zoomImg = overlay.querySelector("img");
+
+            requestAnimationFrame(() => {
+              overlay.classList.add("active");
+            });
+
+            // Click to close
+            overlay.addEventListener("click", closeLightbox);
+
+            zoomImg.addEventListener("click", (e) => {
+              e.stopPropagation();
+            });
+
+            // Mouse wheel zoom
+            zoomImg.addEventListener(
+              "wheel",
+              (e) => {
+                e.preventDefault(); // stop page scroll
+
+                if (e.deltaY < 0) {
+                  // Scroll up → zoom in
+                  scale = Math.min(scale + ZOOM_STEP, MAX_SCALE);
+                } else {
+                  // Scroll down → zoom out
+                  scale = Math.max(scale - ZOOM_STEP, MIN_SCALE);
+                }
+
+                zoomImg.style.transform = `scale(${scale})`;
+              },
+              { passive: false }
+            );
+          });
+        });
+
+        // ESC closes lightbox
+        document.addEventListener("keydown", (e) => {
+          if (e.key === "Escape") {
+            closeLightbox();
+          }
+        });
+      });
+    </script>
+
+    <script>
+      window.MathJax = {
+        tex: {
+          inlineMath: [["$", "$"]],
+        },
+      };
+    </script>
+
+    <script
+      type="text/javascript"
+      id="MathJax-script"
+      async
+      src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+      defer
+    ></script>
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule=""
+      src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"
+    ></script>
+
+    <script defer src="{{ 'js/script.js' | relative_url }} "></script>
+  </head>
+  <body>
+    <!-- Header Start -->
+    <div class="header-outer-container">
+      <div class="main-container">
+        <header class="main-header">
+          <a href="{{ '/index.html' | relative_url }}">
+            <img
+              class="logo"
+              src="{{ '/img/behindai_header.png' | relative_url }}"
+              alt="Behind AI Models Logo"
+              class="logo"
+          /></a>
+
+          <nav class="main-nav">
+            <ul class="main-nav-list">
+              <li>
+                <a
+                  href="{{ '/index.html' | relative_url }}"
+                  class="main-nav-link"
+                  >Home</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ '/about.html' | relative_url }}"
+                  class="main-nav-link"
+                  >About</a
+                >
+              </li>
+              <li>
+                <a
+                  href="{{ '/about.html#contactus' | relative_url }}"
+                  class="main-nav-link"
+                  >Contact</a
+                >
+              </li>
+            </ul>
+          </nav>
+
+          <button class="menu-toggle" id="menuToggle">
+            <ion-icon class="icon-mobile-nav" name="menu-outline"></ion-icon>
+          </button>
+        </header>
+      </div>
+    </div>
+    <!-- Header End -->
+
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <aside class="mobile-sidebar" id="mobileSidebar">
+      <button class="close-btn" id="closeBtn">
+        <ion-icon class="icon-mobile-nav" name="close-outline"></ion-icon>
+      </button>
+      <nav class="mobile-nav">
+        <a href="{{ '/index.html' | relative_url }}" class="mobile-nav-link"
+          >🏠 HOME</a
+        >
+
+        <a href="{{ '/about.html' | relative_url }}" class="mobile-nav-link"
+          >👤 ABOUT</a
+        >
+        <a
+          href="{{ '/about.html#contactus' | relative_url }}"
+          class="mobile-nav-link"
+          >📞 CONTACT</a
+        >
+      </nav>
+      <div class="mobile-categories">
+        <h3 class="mobile-categories-title">Categories</h3>
+        <ul class="categories-list">
+          {% for category in site.categories %}
+          <li class="category-item">
+            {% assign cat_slug = category[0] | slugify %}
+            <a href="{{ '/categories/' | append: cat_slug | relative_url }}">
+              {{ category[0] }}
+            </a>
+            <span class="category-count">({{ category[1].size }})</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </aside>
+
+    {{ content }}
+
+    <div class="footer-outer-container">
+      <div class="main-container">
+        <footer class="footer">
+          <div class="grid-3-cols">
+            <div class="logo-col">
+              <a href="index.html">
+                <img
+                  class="footer-logo"
+                  src="{{ 'img/behindai_footer.png' | relative_url }}"
+                  alt="Behind AI Models Logo"
+              /></a>
+              <span class="copyright">
+                Copyright &copy; <span class="year">2025</span> by Behind AI
+                Models. All rights reserved.
+              </span>
+            </div>
+            <nav class="nav-col">
+              <p class="footer-heading">Quick Links</p>
+              <ul class="footer-nav">
+                <li>
+                  <a
+                    class="footer-link"
+                    href="{{ '/about.html' | relative_url }}"
+                    >About</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="footer-link"
+                    href="{{ '/about.html#contactus' | relative_url }}"
+                    >Contact Us</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="footer-link"
+                    href="{{ '/about.html#disclaimer' | relative_url }}"
+                    >Disclaimer</a
+                  >
+                </li>
+              </ul>
+            </nav>
+            <div class="follow-us-col">
+              <span class="footer-heading">Follow Us</span>
+              <ul class="footer-social-links">
+                <li>
+                  <a class="footer-link" href="#"
+                    ><ion-icon
+                      class="social-icon"
+                      name="logo-linkedin"
+                    ></ion-icon
+                  ></a>
+                </li>
+                <li>
+                  <a class="footer-link" href="#"
+                    ><ion-icon
+                      class="social-icon"
+                      name="logo-instagram"
+                    ></ion-icon
+                  ></a>
+                </li>
+                <li>
+                  <a class="footer-link" href="#"
+                    ><ion-icon
+                      class="social-icon"
+                      name="logo-twitter"
+                    ></ion-icon
+                  ></a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      const menuToggle = document.getElementById("menuToggle");
+      const closeBtn = document.getElementById("closeBtn");
+      const mobileSidebar = document.getElementById("mobileSidebar");
+      const mobileOverlay = document.getElementById("mobileOverlay");
+
+      menuToggle.addEventListener("click", () => {
+        mobileSidebar.classList.add("active");
+        mobileOverlay.classList.add("active");
+      });
+
+      closeBtn.addEventListener("click", () => {
+        mobileSidebar.classList.remove("active");
+        mobileOverlay.classList.remove("active");
+      });
+
+      mobileOverlay.addEventListener("click", () => {
+        mobileSidebar.classList.remove("active");
+        mobileOverlay.classList.remove("active");
+      });
+    </script>
+  </body>
+</html>

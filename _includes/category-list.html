@@ -1,0 +1,20 @@
+<aside class="section-categories">
+  <h3 class="categories-title">Categories</h3>
+  <ul class="categories-list">
+    {% for category in site.categories %}
+    <li class="category-item">
+      {% assign cat_slug = category[0] | slugify %}
+      <a href="{{ '/categories/' | append: cat_slug | relative_url }}">
+        {{ category[0] }}
+      </a>
+      <span class="category-count">({{ category[1].size }})</span>
+    </li>
+    {% endfor %}
+  </ul>
+</aside>
+
+<!-- 
+category[0] → category name
+category[1] → list of posts
+.size → number of posts
+ -->

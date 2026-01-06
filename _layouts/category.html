@@ -1,0 +1,26 @@
+---
+layout: default
+---
+
+<div class="outer-container">
+  <div class="main-container">
+    <h3 class="category-text">Posts on {{ page.category }}</h3>
+
+    <ul>
+      {% assign posts = site.categories[page.category] %} {% for post in posts
+      %}
+      <article class="post-card">
+        <h3 class="post-title">
+          <a class="post-link" href="{{ site.baseurl }}{{ post.url }}"
+            >{{ post.title }}</a
+          >
+        </h3>
+        <p class="post-excerpt">
+          {{ post.excerpt | strip_html | truncatewords: 50 }}
+        </p>
+        <time class="post-date">{{ post.date | date: "%b %d, %Y" }}</time>
+      </article>
+      {% endfor %}
+    </ul>
+  </div>
+</div>

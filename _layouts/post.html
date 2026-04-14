@@ -40,7 +40,7 @@ layout: default
 
     <aside>
       {% for category_name in page.categories limit:1 %}
-      <h4>You May Also Like</h4>
+      <h3 class="eop">You May Also Like</h3>
 
       <ul class="related">
         {% for post in site.categories[category_name] limit:2 %}

@@ -56,6 +56,19 @@ body {
   /* overflow-x: hidden; */
 }
 
+ul, ol {
+  padding-left: 20px; /* Adjust value as needed */
+}
+
+li {
+  margin-bottom: 0.4rem; /* Add spacing between list items */
+}
+
+/* last li in a list should not have margin-bottom */
+li:last-child {
+  margin-bottom: 2rem;
+}
+
 .outer-container {
   padding: 2.4rem;
 }
@@ -75,28 +88,28 @@ h1 {
 
 h2 {
   margin: 4.8rem 0 1.8rem 0;
-  font-size: 4rem;
+  font-size: 3.3rem;
   font-weight: 700;
   line-height: 1.15;
 }
 
 h3 {
   margin: 4.8rem 0 1.8rem 0;
-  font-size: 3.3rem;
+  font-size: 2.8rem;
   font-weight: 700;
   line-height: 1.15;
 }
 
 h4 {
   margin: 4.8rem 0 1.8rem 0;
-  font-size: 2.8rem;
+  font-size: 2.3rem;
   font-weight: 700;
   line-height: 1.15;
 }
 
 h5 {
   margin: 4.8rem 0 1.8rem 0;
-  font-size: 2.3rem;
+  font-size: 1.92rem;
   font-weight: 600;
   line-height: 1.15;
 }
@@ -140,6 +153,10 @@ p {
   display: flex;
   align-items: center;
   gap: 3.2rem;
+}
+
+.main-nav-list li:last-child {
+  margin-bottom: auto;
 }
 
 .main-nav-link:link,
@@ -338,6 +355,10 @@ p {
   content: "🕒 ";
 }
 
+.eop {
+  margin-top: 10rem;
+}
+
 /* .post-container {
   display: flex;
   flex-direction: column;
@@ -534,10 +555,15 @@ article {
 /* INSIDE THE POSTS */
 /**************************/
 
+.post-container {
+  max-width: 90rem;
+}
+
 .figure img {
-  width: 50%;
+  /* width: 100%; */
   display: block;
-  margin: auto;
+  margin: 2rem auto;
+  /* margin: auto; */
 }
 
 .figure figcaption {
@@ -568,7 +594,7 @@ strong {
 
 #markdown-toc {
   border-left: 4px solid #467ff7;
-  padding-left: 1rem;
+  padding-left: 2rem;
   margin: 1.5rem 0;
 }
 
@@ -623,7 +649,7 @@ table tbody tr:hover {
 /* Admonitions */
 .admonition {
   border-left: 4px solid;
-  padding: 0.75rem 1rem;
+  padding: 1.5rem;
   margin: 1.5rem 0;
   border-radius: 4px;
   background: #f8f9fa;

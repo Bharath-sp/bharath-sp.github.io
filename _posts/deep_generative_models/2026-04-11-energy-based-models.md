@@ -5,14 +5,14 @@ categories: [Deep Generative Models]
 toc: true
 ---
 
-We are given a set of samples from some (unknown) distribution. How can we generate more samples from this underlying unknown distribution?
+We are given a set of samples from some (unknown) distribution. How can we generate more samples from this unknown distribution? In this post, we will see how to solve this problem using energy-based models and Langevin Monte Carlo (LMC) sampling algorithm.
 
 * TOC
 {:toc}
 
 ## Problem Setup
 
-We have an underlying distribution $p^*$. We are given samples from it. Let the underlying distribution be $p^*(x)$ and the samples given are $x_1, x_2, \dots, x_m$. This forms our training set. Using only this training set (without the knowledge of $p^*$), the objective is to create more samples from $p^*$.
+We have an underlying distribution $p^\*$. We are given samples from it. Let the underlying distribution be $p^\*(x)$ and the samples given are $x_1, x_2, \dots, x_m$. This forms our training set. Using only this training set (without the knowledge of $p^\*$), the objective is to create more samples from $p^\*$.
 
 ```python
 import numpy as np
@@ -30,7 +30,7 @@ samples = np.random.normal(mu, sigma, n_samples)
 ```
 
 <figure markdown="0" class="figure zoomable">
-<img src="{{'/assets/images/deep_generative_models/1d_gaussian.png' | relative_url}}" alt="Generating samples from a 1D Gaussian distribution and visualizing them using a histogram."><figcaption>
+<img src="{{'/assets/images/deep_generative_models/1d_gaussian.png' | relative_url}}" alt="Generating samples from a 1D Gaussian distribution and visualizing them using a histogram." width="50%"><figcaption>
   <strong>Figure 1.</strong> Generating samples from a 1D Gaussian distribution and visualizing them using a histogram.
   </figcaption>
 </figure>
@@ -78,9 +78,10 @@ $$
 In training, the objective is to minimize this loss. We typically use gradient descent algorithm to solve this. To use gradient descent, we need the gradient of the objective function (log-likelihood function)
 
 <a name="eq:eq1"></a>
-$$
+\begin{equation}
 \nabla_{\theta} LL(\theta) = \frac{1}{N}\sum_{i=1}^N \nabla_{\theta} \log p_{\theta}(x_i) \tag{1}
-$$
+\end{equation}
+
 
 The energy-based models assume that our distribution $p_{\theta}$ is of the form:
 
@@ -128,7 +129,6 @@ $$
 $$
 
 * The first term is the expectation of the gradient of energy with samples from $p^*(x)$.
-
 * The second term is the expectation of the gradient of energy with samples from our learned distribution $p_{\theta}$.
 
 At optimality, i.e., When $\nabla LL(\theta) = 0$, we must have:
@@ -178,7 +178,7 @@ $$
 
 We run this update rule for $K$ iterations. As $K \to \infty$, the distribution of $X_K$ converges to $p^*$, which is the distribution we want to sample from.
 
-<div class="admonition tip">
+<div class="admonition note">
   <p class="admonition-title">Note</p>
   <p>It may not be clear at first glance why this iteration procedure takes us to the target distribution, but it is a well-established technique in sampling theory, which we can discuss more in a later article.</p>
 </div>
@@ -243,7 +243,8 @@ for epoch in range(30):
   for i, (batch_x,) in enumerate(train_loader):
         batch_x = batch_x.to(device)
 
-        # 1. Generate 'negative' samples using the Langevin function, starting from random noise from uniform distribution
+        # 1. Generate 'negative' samples using the Langevin function.
+        # Starting from random noise from uniform distribution
         x_fake = torch.empty(batch_x.shape).uniform_(0, 15) 
         x_fake = langevin_monte_carlo(x_fake, model, n_steps=15)
 
@@ -269,7 +270,7 @@ for epoch in range(30):
 After training, the learnt energy function $f_{\theta}$ is as below:
 
 <figure markdown="0" class="figure zoomable">
-<img src="{{'/assets/images/deep_generative_models/01_learn_ebm.png' | relative_url}}" alt="Modelled energy function $f_{\theta}$ after training."><figcaption>
+<img src="{{'/assets/images/deep_generative_models/01_learnt_ebm.png' | relative_url}}" alt="Modelled energy function $f_{\theta}$ after training." width="50%"><figcaption>
   <strong>Figure 2.</strong> Modelled energy function $f_{\theta}$ after training.
   </figcaption>
 </figure>
@@ -287,7 +288,7 @@ particle_flow = langevin_monte_carlo(x_fake, model, n_steps=15, intermediate_sam
 ```
 
 <figure markdown="0" class="figure zoomable">
-<img src="{{'/assets/images/deep_generative_models/01_particle_flow.png' | relative_url}}" alt="Visualization of the particle flow in LMC."><figcaption>
+<img src="{{'/assets/images/deep_generative_models/01_particle_flow.png' | relative_url}}" alt="Visualization of the particle flow in LMC." width="50%"><figcaption>
   <strong>Figure 3.</strong> Visualization of the particle flow in LMC.
   </figcaption>
 </figure>
@@ -297,7 +298,13 @@ The particles start from a uniform distribution and gradually move towards the t
 The generated samples can be visualized at each time step using a histogram to see how the uniform distribution is getting transformed to the target distribution.
 
 <figure markdown="0" class="figure zoomable">
-<img src="{{'/assets/images/deep_generative_models/01_likelihood_flow.png' | relative_url}}" alt="Visualization of the likelihood flow in LMC."><figcaption>
+<img src="{{'/assets/images/deep_generative_models/01_likelihood_flow.png' | relative_url}}" alt="Visualization of the likelihood flow in LMC." width="100%"><figcaption>
   <strong>Figure 4.</strong> Visualization of the likelihood flow in LMC.
   </figcaption>
 </figure>
+
+## References
+
+1. Tutorial 8: Deep Energy-Based Generative Models — UvA DL Notebooks v1.2 documentation. (n.d.). [https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial8/Deep_Energy_Models.html](https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial8/Deep_Energy_Models.html){:target="_blank"}
+
+2. Swyoon. (n.d.). pytorch-energy-based-model/train_energy_based_model.py at master. GitHub. [https://github.com/swyoon/pytorch-energy-based-model/tree/master](https://github.com/swyoon/pytorch-energy-based-model/tree/master){:target="_blank"}

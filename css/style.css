@@ -200,7 +200,7 @@ p {
 .mobile-sidebar {
   display: none;
   position: fixed;
-  top: 8rem;
+  top: 0;
   right: -400px;
   width: 400px;
   height: 100vh;

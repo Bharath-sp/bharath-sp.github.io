@@ -56,8 +56,12 @@ body {
   /* overflow-x: hidden; */
 }
 
-ul, ol {
+.post ul, ol {
   padding-left: 20px; /* Adjust value as needed */
+}
+
+ion-icon {
+  pointer-events: none;
 }
 
 li {

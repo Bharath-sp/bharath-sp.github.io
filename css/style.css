@@ -180,6 +180,22 @@ p {
   padding-bottom: 2px;
 }
 
+.MathJax_Display,
+mjx-container[display="true"] {
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+}
+
+pre {
+    overflow-x: auto;
+    max-width: 100%;
+}
+
+pre code {
+    white-space: pre;
+}
+
 /* MOBILE */
 
 .icon-mobile-nav {

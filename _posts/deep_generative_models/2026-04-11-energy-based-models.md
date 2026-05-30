@@ -305,6 +305,6 @@ The generated samples can be visualized at each time step using a histogram to s
 
 ## References
 
-1. Tutorial 8: Deep Energy-Based Generative Models — UvA DL Notebooks v1.2 documentation. (n.d.). [https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial8/Deep_Energy_Models.html](https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial8/Deep_Energy_Models.html){:target="_blank"}
+1. Tutorial 8: Deep Energy-Based Generative Models — [UvA DL Notebooks v1.2 documentation](https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial8/Deep_Energy_Models.html){:target="_blank"}
 
-2. Swyoon. (n.d.). pytorch-energy-based-model/train_energy_based_model.py at master. GitHub. [https://github.com/swyoon/pytorch-energy-based-model/tree/master](https://github.com/swyoon/pytorch-energy-based-model/tree/master){:target="_blank"}
+2. Swyoon. (n.d.). pytorch-energy-based-model/train_energy_based_model.py at master. [GitHub](https://github.com/swyoon/pytorch-energy-based-model/tree/master){:target="_blank"}

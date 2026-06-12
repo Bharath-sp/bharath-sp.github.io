@@ -187,6 +187,11 @@ mjx-container[display="true"] {
     max-width: 100%;
 }
 
+.scroll-equation {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
 pre {
     overflow-x: auto;
     max-width: 100%;

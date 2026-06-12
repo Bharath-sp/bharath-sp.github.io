@@ -77,10 +77,15 @@ $$
 
 In training, the objective is to minimize this loss. We typically use gradient descent algorithm to solve this. To use gradient descent, we need the gradient of the objective function (log-likelihood function)
 
-<a name="eq:eq1"></a>
+<div class="scroll-equation" id="eq:eq1">
+
+$$
 \begin{equation}
-\nabla_{\theta} LL(\theta) = \frac{1}{N}\sum_{i=1}^N \nabla_{\theta} \log p_{\theta}(x_i) \tag{1}
+\nabla_{\theta} LL(\theta) = \frac{1}{N}\sum_{i=1}^N \nabla_{\theta} \log p_{\theta}(x_i)
 \end{equation}
+$$
+
+</div>
 
 
 The energy-based models assume that our distribution $p_{\theta}$ is of the form:
@@ -89,16 +94,18 @@ $$
 p_{\theta}(x) = \frac{e^{-f_{\theta}(x)}}{\int e^{-f_{\theta}(x)} dx} = \frac{e^{-f_{\theta}(x)}}{Z(\theta)}
 $$
 
-where $f_{\theta}(x)$ is called the energy function. The energy function takes $x$ as input and gives a real number. This can be modelled using a neural network, and $\theta$ are the parameters of this network. On substituting $p_{\theta}(x)$ in <a href="#eq:eq1">(1)</a>:
+where $f_{\theta}(x)$ is called the energy function. The energy function takes $x$ as input and gives a real number. This can be modelled using a neural network, and $\theta$ are the parameters of this network. On substituting $p_{\theta}(x)$ in equation <a href="#eq:eq1">(1)</a>:
+
 
 $$
 \begin{align*}
 \nabla h(\theta) & = \frac{1}{N} \sum_{i=1}^N \nabla \left(- f_{\theta}(x_i) - \log Z(\theta) \right) \\
 & = -\frac{1}{N} \sum_{i=1}^N \nabla f_{\theta}(x_i) 
--\frac{1}{N} \sum_{i=1}^N \nabla \log Z(\theta) \\
-& = -\frac{1}{N} \sum_{i=1}^N \nabla f_{\theta}(x_i) - \nabla \log Z(\theta) \\
+-\frac{1}{N} \sum_{i=1}^N \nabla \log Z(\theta)  \\
+& = -\frac{1}{N} \sum_{i=1}^N \nabla f_{\theta}(x_i) - \nabla \log Z(\theta)
 \end{align*}
 $$
+
 
 We know that
 

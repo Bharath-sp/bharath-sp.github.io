@@ -1,26 +1,27 @@
 ---
 layout: post
-title: Energy-Based Models + LMC
+title: Generation using Energy-Based Models
 categories: [Deep Generative Models]
 toc: true
 ---
 
-We are given a set of samples from some (unknown) distribution. How can we generate more samples from this unknown distribution? In this post, we will see how to solve this problem using energy-based models and Langevin Monte Carlo (LMC) sampling algorithm.
+We are given a set of samples from some (unknown) distribution. How can we generate more samples from this unknown distribution? This is a classical problem in generative modelling. This post shows how to solve this problem using energy-based models with Langevin Monte Carlo (LMC) sampling algorithm.
 
 * TOC
 {:toc}
 
 ## Problem Setup
 
-We have an underlying distribution $p^\*$. We are given samples from it. Let the underlying distribution be $p^\*(x)$ and the samples given are $x_1, x_2, \dots, x_m$. This forms our training set. Using only this training set (without the knowledge of $p^\*$), the objective is to create more samples from $p^\*$.
+We are given samples $\{x_1, x_2, \dots, x_N\}$, where $x_i \in \mathbb{R}$, which comes from some unknown distribution. Let that underlying distribution be $p^\*$. This forms our training set. Using only this training set, the objective is to generate more samples from $p^\*$.
+
+Let's assume we have $N=10,000$ samples from a 1D Gaussian distribution with mean $\mu=5$ and variance $\sigma^2=1$. The histogram of the samples is shown below.
+
 
 ```python
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-```
 
-```python
 mu = 5
 sigma = 1
 n_samples = 1000
@@ -42,16 +43,16 @@ $$
 p(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^2}  \hspace{0.5cm} \text{where } \mu = 5, \sigma = 1
 $$
 
-Let's pretend that we don't know the parameters $\mu$ and $\sigma$ of the underlying distribution. We only have the samples $\{x_1, x_2, \dots, x_N\}$ where $N=10,000$ and $x_i \in \mathbb{R}$. How can we generate more samples from this underlying distribution?
+Now, let's pretend that we don't know the parameters $\mu$ and $\sigma$ of this underlying distribution. We only have the samples $\{x_1, x_2, \dots, x_N\}$. How can we generate more samples from this (unknown) underlying distribution?
 
 ## Solution Approach
-Let's use explicit generative modelling approach to solve this problem, which is a two-step process.
+Let's look at an explicit generative modelling approach to solve this problem, which is a two-step process.
 
 1. We first learn a distribution $p$ which should be as close as possible to the underlying distribution $p^*$ (likelihood estimation problem) using the given samples. We'll use **energy-based models** to learn this distribution.
 2. Then, we use **Langevin Monte Carlo** algorithm to generate new samples from this learned distribution.
 
 ## Loss function
-We don't know the form or anything about the underlying distribution. Let's begin with parameterizing our distribution $p$ by $\theta$. Given training samples, the likelihood of those samples under our model distribution $p_{\theta}$ is:
+We don't know the form or anything about the underlying distribution. Let's begin with parameterizing our distribution $p$ by $\theta$. Given training samples, the likelihood of the given samples under our model distribution $p_{\theta}$ is:
 
 $$
 L(\theta) := \prod_{i=1}^N p_{\theta}(x_i)
@@ -69,13 +70,13 @@ $$
 \arg \max_{\theta} LL(\theta) =  \arg \max_{\theta} \frac{1}{N} \sum_{i=1}^N \log p_{\theta}(x_i)
 $$
 
-But we always look at the negative of log-likelihood (NLL), which is the loss:
+The negative of log-likelihood (NLL) (also known as the loss) is:
 
 $$
 \mathcal{L}(\theta) = - LL(\theta)
 $$
 
-In training, the objective is to minimize this loss. We typically use gradient descent algorithm to solve this. To use gradient descent, we need the gradient of the objective function (log-likelihood function)
+During training, the objective is to minimize this loss. We typically use gradient descent algorithm to solve this. To use gradient descent, we need the gradient of the objective function (log-likelihood function)
 
 <div class="scroll-equation" id="eq:eq1">
 
@@ -94,12 +95,12 @@ $$
 p_{\theta}(x) = \frac{e^{-f_{\theta}(x)}}{\int e^{-f_{\theta}(x)} dx} = \frac{e^{-f_{\theta}(x)}}{Z(\theta)}
 $$
 
-where $f_{\theta}(x)$ is called the energy function. The energy function takes $x$ as input and gives a real number. This can be modelled using a neural network, and $\theta$ are the parameters of this network. On substituting $p_{\theta}(x)$ in equation <a href="#eq:eq1">(1)</a>:
+where $f_{\theta}(x)$ is called the **energy function**. The energy function takes $x$ as input and gives a real number. This can be modelled using a neural network, and $\theta$ are the parameters of this network. On substituting $p_{\theta}(x)$ in equation <a href="#eq:eq1">(1)</a>:
 
 
 $$
 \begin{align*}
-\nabla h(\theta) & = \frac{1}{N} \sum_{i=1}^N \nabla \left(- f_{\theta}(x_i) - \log Z(\theta) \right) \\
+\nabla LL(\theta) & = \frac{1}{N} \sum_{i=1}^N \nabla \left(- f_{\theta}(x_i) - \log Z(\theta) \right) \\
 & = -\frac{1}{N} \sum_{i=1}^N \nabla f_{\theta}(x_i) 
 -\frac{1}{N} \sum_{i=1}^N \nabla \log Z(\theta)  \\
 & = -\frac{1}{N} \sum_{i=1}^N \nabla f_{\theta}(x_i) - \nabla \log Z(\theta)
@@ -185,9 +186,9 @@ $$
 
 We run this update rule for $K$ iterations. As $K \to \infty$, the distribution of $X_K$ converges to $p^*$, which is the distribution we want to sample from.
 
-<div class="admonition note">
-  <p class="admonition-title">Note</p>
-  <p>It may not be clear at first glance why this iteration procedure takes us to the target distribution, but it is a well-established technique in sampling theory, which we can discuss more in a later article.</p>
+<div class="admonition warning">
+  <p class="admonition-title">Warning</p>
+  <p>It may not be clear why this iteration procedure takes us to the target distribution, but it is a well-established technique in sampling theory. Only the algorithmic details are provided here.</p>
 </div>
 
 The LMC procedure is coded as follows:

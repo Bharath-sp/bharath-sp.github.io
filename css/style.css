@@ -595,7 +595,7 @@ article {
 
 .figure figcaption {
   color: #bebebe;
-  text-align: center;
+  /* text-align: center; */
   margin-bottom: 2rem;
 }
 
@@ -703,11 +703,14 @@ table tbody tr:hover {
 
 .related {
   list-style: none;
-  display: flex;
-  gap: 3rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 3rem;
+  align-content: center;
+  /* gap: 3rem; */
   /* border: 2px solid #edf2fe; */
-  justify-content: center;
-  align-items: stretch;
+  /* justify-content: center;
+  align-items: stretch; */
 }
 
 .related-post {
